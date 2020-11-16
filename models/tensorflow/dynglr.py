@@ -529,15 +529,14 @@ class DYNGLR:
         glr_ret, _, _ = glr_fidelity(adj, binarize(ly, 1), kwargs.get('dynglr_mu', 1.0), labelednum, unlabelednum, nodenum, normlap=kwargs.get('g2_normlap', False))
 
         glr_sret = tf.slice(glr_ret, [0,labelednum], [batchsize, unlabelednum])
-        #ret = tf.cast(tf.greater(glr_sret, 0.0), tf.int32)
-        ret = glr_sret
 
         #update acc
         if avg_eval:
             #ret = tf.cast(tf.greater_equal(tf.reduce_sum(ret,0, keepdims=True), np.ceil(len(lx)*0.5)), tf.int32)
-            ret = tf.cast(tf.greater(tf.reduce_sum(ret,0, keepdims=True), 0.0), tf.int32)
+            ret = tf.cast(tf.greater(tf.reduce_sum(glr_sret,0, keepdims=True), 0.0), tf.int32)
             self.metrics['g2_acc'].update_state(y, ret)
         else:
+            ret = tf.cast(tf.greater(glr_sret, 0.0), tf.int32)
             self.metrics['g2_acc'].update_state(my, ret)
     
     @tf.function
@@ -579,15 +578,14 @@ class DYNGLR:
         glr_ret, _, _ = glr_fidelity(adj, binarize(ly, 1), kwargs.get('dynglr_mu', 1.0), labelednum, unlabelednum, nodenum, normlap=kwargs.get('dynglr_norm', False))
 
         glr_sret = tf.slice(glr_ret, [0,labelednum], [batchsize, unlabelednum])
-        #ret = tf.cast(tf.greater(glr_sret, 0.0), tf.int32)
-        ret = glr_sret
 
         #update acc
         if avg_eval:
             #ret = tf.cast(tf.greater_equal(tf.reduce_sum(ret,0, keepdims=True), np.ceil(len(lx)*0.5)), tf.int32)
-            ret = tf.cast(tf.greater(tf.reduce_sum(ret,0, keepdims=True), 0.0), tf.int32)
+            ret = tf.cast(tf.greater(tf.reduce_sum(glr_sret, 0, keepdims=True), 0.0), tf.int32)
             self.metrics['g12_acc'].update_state(y, ret)
-        else:          
+        else:         
+            ret = tf.cast(tf.greater(glr_sret, 0.0), tf.int32)
             self.metrics['g12_acc'].update_state(my, ret)
   
     @tf.function
@@ -655,15 +653,14 @@ class DYNGLR:
         glr_ret2, _, _ = glr_fidelity(adj2, glr_ret, kwargs.get('dynglr_mu2', 1.0), labelednum, unlabelednum, nodenum, ally=True, normlap=kwargs.get('dynglr_norm', False), kappafactor=kwargs.get('kappa_factor', 0.5))
 
         glr_sret2 = tf.slice(glr_ret2, [0,labelednum], [batchsize, unlabelednum])
-        #ret2 = tf.cast(tf.greater(glr_sret2, 0.0), tf.int32)
-        ret2 = glr_sret2
 
         #update acc
         if avg_eval:
             #ret2 = tf.cast(tf.greater_equal(tf.reduce_sum(ret2,0, keepdims=True), np.ceil(len(lx)*0.5)), tf.int32)
-            ret2 = tf.cast(tf.greater(tf.reduce_sum(ret2,0, keepdims=True), 0.0), tf.int32)
+            ret2 = tf.cast(tf.greater(tf.reduce_sum(glr_sret2,0, keepdims=True), 0.0), tf.int32)
             self.metrics['g1232_acc'].update_state(y, ret2)
         else: 
+            ret2 = tf.cast(tf.greater(glr_sret2, 0.0), tf.int32)
             self.metrics['g1232_acc'].update_state(my, ret2)
     
     @tf.function
@@ -739,15 +736,14 @@ class DYNGLR:
         glr_ret2, _, _ = glr_fidelity(adj2, glr_ret, kwargs.get('dynglr_mu2', 1.0), labelednum, unlabelednum, nodenum, ally=True, normlap=kwargs.get('dynglr_norm', False), kappafactor=kwargs.get('kappa_factor', 0.5))
 
         glr_sret2 = tf.slice(glr_ret2, [0,labelednum], [batchsize, unlabelednum])
-        #ret2 = tf.cast(tf.greater(glr_sret2, 0.0), tf.int32)
-        ret2 = glr_sret2
 
         #update acc
         if avg_eval:
             #ret2 = tf.cast(tf.greater_equal(tf.reduce_sum(ret2,0, keepdims=True), np.ceil(len(lx)*0.5)), tf.int32)
-            ret2 = tf.cast(tf.greater(tf.reduce_sum(ret2,0, keepdims=True), 0.0), tf.int32)
+            ret2 = tf.cast(tf.greater(tf.reduce_sum(glr_sret2, 0, keepdims=True), 0.0), tf.int32)
             self.metrics['g12312_acc'].update_state(y, ret2)
         else:
+            ret2 = tf.cast(tf.greater(glr_sret2, 0.0), tf.int32)
             self.metrics['g12312_acc'].update_state(my, ret2)
 
     def destroy(self):
